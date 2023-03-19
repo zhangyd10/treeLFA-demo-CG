@@ -1,9 +1,7 @@
 ---
 title: "treeLFA-demo"
 author: "Yidong Zhang"
-output:
-  html_document: default
-  pdf_document: default
+output: rmarkdown::github_document
 ---
 
 <style type="text/css">
@@ -23,7 +21,7 @@ topics of disease codes from binary diagnosis data. This tutorial gives an examp
 small simulated dataset. 
 Firstly, load the libraries and source the scripts: 
 ```{r}
-library(data.table)
+library(data.table) 
 library(dplyr)
 library(Rcpp)
 library(RcppParallel)
