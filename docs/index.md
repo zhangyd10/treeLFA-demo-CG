@@ -176,4 +176,4 @@ pl <- predL( g_result$alpha, g_result$Phi_samples[[1]], data, tree_str, IS=100 )
 print(pl)
 ```
 
-    ## [1] -7900.029
+    ## [1] -7901.25
