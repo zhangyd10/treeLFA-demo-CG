@@ -132,7 +132,7 @@ print(pl)
 
 
 To combine multiple posterior samples of hidden variables for downstream analyses, posterior samples of inferred topics can be clustered firstly, followed by the clustering of other hidden variables. Louvain algorithm can be applied using the "cls_louvain" function:  
-```{r,echo=TRUE}
+```{r,echo=TRUE,message=FALSE}
 g_result <- cls_louvain(g_result,k=25)
 ```
 The "g_result" in the function is the result object given by the Gibbs sampling function for treeLFA in the previous step, and "k" is a parameter for the Louvain algorithm, which specifies the number of neighbours considered to build the shared nearest neighbour graph. Large values for k will result in fewer clusters (as similar small clusters will be combined into a larger one), while small values for k will result in many smaller clusters. It is recommended to use an integer within the range of (N_ps/2,N_ps) for k, where N_ps is the number of posterior samples of hidden variables given by the Gibbs sampler.
@@ -149,7 +149,7 @@ In the new "g_result" object, the "topics_ave_h" matrix stores the topics kept a
 
 
 Topics given by the hierarchcial clustering can be plotted and checked: 
-```{r,echo=TRUE}
+```{r,echo=TRUE,out.width="40%"}
 topics_plot( g_result$topics_ave_h )  
 ```
 
