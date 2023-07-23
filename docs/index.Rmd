@@ -158,6 +158,9 @@ In the last step, other hidden variables can be put into corresponding clusters 
 g_result <- cls_others(g_result)
 ```
 In the new "g_result" object, the "tw_ave" matrix stores the averaged topic weights for all individuals, and the "alpha_ave" is the averaged hyperparameter alpha. The averaged topic weights for individuals can be used for downstream association analysis (such as topic-GWAS). 
+
+
+The first five individuals' topic weights are plotted for visualization: 
 ```{r,echo=TRUE,out.width="50%"}
 tw_plot( g_result$tw_ave[1:5,] )  
 
