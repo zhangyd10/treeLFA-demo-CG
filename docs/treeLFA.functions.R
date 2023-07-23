@@ -104,7 +104,8 @@ gibbs_EM_train <- function( topic.number,
   
   }
   
-  
+  tree_str_code <- tree_str
+    
   
   
   # Prepara the tree str: change the names of diseases codes to indexes:
@@ -248,7 +249,7 @@ gibbs_EM_train <- function( topic.number,
             opt_N_2, cycle_2 )
 
   names(result) <- c("Phi_samples","I_samples","rho_samples","alpha_samples","Z_samples","L_all")
-  
+
   return(result)
 
 }
@@ -273,6 +274,25 @@ gibbs_train <- function( data, tree_str,
   S1 <- nrow(tree_str) - ncol(data)      # number of internal disease codes on the tree 
   # S1 <- 5
   data <- as.matrix(data)
+  
+  
+  
+  
+  ## Process the tree structure: 
+  # Terminal codes on the tree:
+  tree_ter <- tree_str[terminal=="Y",]
+  
+  ## Reorder terminal/internal codes: 
+  # internal codes:
+  tree_int <- tree_str[!(node %in% colnames(data)),]
+  
+  # Reorder internal codes: according to layers of codes 
+  tree_int<- tree_int[order(layer),]
+  
+  # Reorder termianl codes: according to the columns (order of disease codes) of the input data
+  tree_ter <- tree_ter[match(colnames(data),tree_ter$node)]
+  
+  tree_str <- rbind(tree_int,tree_ter)
   
   
   
@@ -606,6 +626,7 @@ cls_others <- function(g_result) {
     clust_h <- g_result$clust_h
   } else { 
     clust_h <- unique(g_result$clust)
+    g_result$clust_h <- clust_h
   }
   
   

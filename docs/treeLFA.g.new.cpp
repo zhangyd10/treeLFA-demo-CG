@@ -945,7 +945,7 @@ Rcpp::List gibbs( int K, int S, int S1, int D,
 
   for ( int c=1; c<=cycle; c++ ){ 
     
-    if ( c % interval == 0 ) { 
+    if ( c % 500 == 0 ) { 
       std::cout << "Gibbs sampling iteration: " << c << std::endl;
     } 
     

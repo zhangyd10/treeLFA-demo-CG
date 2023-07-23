@@ -105,7 +105,7 @@ On very large datasets, the Gibbs-EM training can be divided into sevaral phases
 
 With alpha optimized and fixed, Gibbs sampling can be used to collected multiple posterior sampels of hidden variables. The number of burn in Gibbs iterations (argument "burn_in"), the total number of Gibbs iterations (argument "cycle") and the number of interval iterations while collecting posterior samples (argument "interval") need to be set: 
 ```{r, echo=TRUE,results='hide'}
-g_result <- gibbs_train( data,tree_str,
+g_result <- gibbs_train( data,tree_str=tree_str,
                          Phi=ge_result$Phi_samples, 
                          I=ge_result$I_samples, 
                          rho=ge_result$rho_samples, 
@@ -124,7 +124,7 @@ topics_plot( g_result$Phi_samples[[5]] )      # Use the 5th posterior sample of 
 Predictive likelihood (on log10 scale) on the testing data can be calcualted as below. The 1st posterior sample given by the Gibbs sampler in the step above is used to calculate the predictive likelihood. The argument "IS" denotes the number of monte-carlo samples of topic weights (theta) used in approximating the predictive likelihood. Note that the testing data and training data should have the same column names.
 ```{r, echo=TRUE}
 data_test <- fread("simu.test.data.txt")    
-pl <- predL( g_result$alpha, g_result$Phi_samples[[1]], data, IS=100 )
+pl <- predL( g_result$alpha, g_result$Phi_samples[[1]], data, IS=200 )
 print(pl)
 ```
 

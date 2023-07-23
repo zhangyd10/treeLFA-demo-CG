@@ -944,7 +944,7 @@ Rcpp::List gibbs_EM( int K, int S, int S1, int D,
   for ( int c=1; c<=(cycle_1); c++ ){ 
     
     if ( c % 50 == 0 ) { 
-      std::cout << "EM cycle: " << c << std::endl;
+      std::cout << "EM iteration (stage 1): " << c << std::endl;
     }
     
     
@@ -988,7 +988,7 @@ Rcpp::List gibbs_EM( int K, int S, int S1, int D,
   for ( int c=(cycle_1+1); c<=(cycle_1+cycle_2); c++ ){ 
     
     if ( c % 5 == 0 ) {
-      std::cout << "EM cycle: " << c << std::endl;
+      std::cout << "EM iteration (stage 2): " << c << std::endl;
     }
     
     // Gibbs sampling: one iteration
