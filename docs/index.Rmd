@@ -149,7 +149,7 @@ In the new "g_result" object, the "topics_ave_h" matrix stores the topics kept a
 
 
 Topics given by the hierarchcial clustering can be plotted and checked: 
-```{r,echo=TRUE,out.width="30%"}
+```{r,echo=TRUE,out.width="10%"}
 topics_plot( g_result$topics_ave_h )  
 ```
 
