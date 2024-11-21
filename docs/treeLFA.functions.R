@@ -12,20 +12,21 @@ gibbs_EM_train <- function( topic.number,
   S1 <- nrow(tree_str) - ncol(data)    # number of internal disease codes on the tree
   # S1 <- 5
   data <- as.matrix(data)
+  colnames(tree_str) <- c("node","parent")
+
   
   
   
   
-  
-  ## Check the input diagnosis data: 
-  # Check the input matrix is binary: 
-  if ( all( names(table(data)) == c("0","1") ) == FALSE ) { 
-    stop("The diagnosis data is not binary (coded using 0 and 1)!")
+  # Check the input diagnosis data: 
+  # (1) the matrix is a double matrix
+  if ( !(is.integer(data)) & !(is.double(data)) ) { 
+    stop("The input matrix is not a interger matrix!")  
   }
-  
-  # Check there are no repetitive disease codes in the input diagnosis matrix: 
-  if ( length(unique(colnames(data))) < ncol(data) ) { 
-    stop("There are repetitive disease codes in the input data!")
+  # (2) check the matrix only contains 0/1
+  check01_fun <- function(x) all(x %in% c(0, 1))
+  if ( !check01_fun(data) ){ 
+    stop("The input matrix contains values other than 0 and 1!")  
   }
   
   
@@ -33,78 +34,42 @@ gibbs_EM_train <- function( topic.number,
   
   
   ### Tree structure: 
-  ## Check the column names:
-  if ( all( colnames(tree_str) != c("node","parent","layer","terminal") ) ) { 
-    stop("The columns of the tree structure matrix should be set as required!")  
-  }
-
-  # Check repetitive codes in the 1st column: 
-  if ( length(unique(tree_str$node)) != nrow(tree_str) ) { 
-    stop("There are repetitive disease codes in the 1st column!")
+  # Check the input tree str matrix: 
+  nodes_ch <- colnames(data)
+  nodes_pa <- tree_str$node[which(!(tree_str$node %in% colnames(data)))]
+  nodes_ch <- tree_str$node[which(!(tree_str$node %in% nodes_pa))]
+  
+  # (1) Check the tree str matrix contains the same terminal disease codes as the input data matrix: 
+  if ( !setequal(colnames(data),c(nodes_ch)) ) { 
+    stop("The input diagnosis data matrix and the tree structure matrix do not have the same set of disease codes")  
   }
   
-  # Check root nodes in the 2nd column of the tree: 
-  if ( !(any(tree_str$parent=="root")) ) { 
-    stop("No root node in the 2nd column coded as \"root\"!")
-  }
-  
-  # Check layers of disease codes
-  if (setequal(  unique(tree_str$layer), seq( 2,(length(unique(tree_str$layer))+1) )  )==FALSE ) { 
-    stop("Layers of disease codes should be a series of integers starting from 2 ")
-  }
-  
-  # Check the coding of terminal codes: 
-  if ( setequal( unique(tree_str$terminal), c("Y","N") ) == FALSE ) { 
-    stop("The terminal/internal codes should be indicated with \"Y\" and \"N\"")
+  # (2) Check that there is no repetitive codes in the 1st column of the tree str matrix: 
+  if ( sum(duplicated(tree_str$node))>0 ) { 
+    stop("There is repetitive nodes in the tree structure matrix!")
   }
   
   
-  
-  # Terminal codes on the tree:
-  tree_ter <- tree_str[terminal=="Y",]
-  
-  # Check that terminal codes on the tree structure and codes in the input data match:
-  if ( setequal(tree_ter$node, colnames(data))==FALSE ) { 
-    stop("The terminal codes in the tree structure matrix and disease codes in the input data do not match!")
+  # (3)-1 Check the 1st column in the tree str matrix doesn't contain the "root" node
+  if( "root" %in% tree_str$node ) { 
+    stop("The root node cannot be in the 1st column of the tree structure matrix!")
   }
   
-  
-  ## Reorder terminal/internal codes: 
-  # internal codes:
-  tree_int <- tree_str[!(node %in% colnames(data)),]
-
-  # Reorder internal codes: according to layers of codes 
-  tree_int<- tree_int[order(layer),]
-  
-  # Reorder termianl codes: according to the columns (order of disease codes) of the input data
-  tree_ter <- tree_ter[match(colnames(data),tree_ter$node)]
-  
-  tree_str <- rbind(tree_int,tree_ter)
-  
-  
-  
-  
-  # Check that the parent code of each code is on the layer above: 
-  for ( i in 1:nrow(tree_str) ) { 
-      
-    if ( tree_str$layer[i]==2 ) { 
-      if ( tree_str$parent[i]!="root" ) { 
-        stop( "The parent code of disease codes on the 2nd layer must be the root code (coded as \"root\")!" ) 
-      }
-    } else { 
-      
-      # layer of parent node:
-      pa <- unlist( tree_str[node==tree_str$parent[i],"node"] )
-      
-      if ( unlist(tree_str[node==pa,"layer"]) != (tree_str$layer[i]-1) ) { 
-        stop( paste("The parent code of code", paste("\"",tree_str$node[i],"\"",sep=""), "is not on the above layer!") )
-      }
-      
-    }
-  
+  # (3)-2 Check the 2nd column in the tree str matrix contains the "root" node
+  if ( !("root" %in% tree_str$parent) ) { 
+    stop("The root node is not in the 2nd column of the tree structure matrix!")
   }
   
-  tree_str_code <- tree_str
+  # (4) Check the parent nodes in the 2nd column are not the terminal codes in the 1st column: 
+  if ( sum( unique(tree_str$parent) %in% nodes_ch ) > 0  ) { 
+    stop("The parent nodes in the 2nd column cannot be the terminal disease codes in the 1st column")  
+  }
+  
+  # (5) Check the parent codes in the 2nd column are the same as the parent codes in the 1st column: 
+  # which means all the parent codes in the 2nd column are also in the 1st column 
+  if ( !setequal( unique(tree_str$parent), c("root",nodes_pa) ) ) { 
+    stop("The parent nodes in the 2nd column cannot be the terminal disease codes in the 1st column")  
+  }
     
   
   
@@ -130,6 +95,13 @@ gibbs_EM_train <- function( topic.number,
   
   
   
+  
+  ## Set the hyper-parameters:
+  # Check the length of alpha is the same as the total number of topics: 
+  if ( length(alpha) != topic.number ) { 
+    stop("The length of alpha should be the same of the number of topics to be inferred!")
+  }
+
   
   ## Set the hyper-parameters:
   # Beta prior for phi based on incidence of diseases:
