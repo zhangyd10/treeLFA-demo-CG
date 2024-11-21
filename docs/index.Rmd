@@ -67,7 +67,7 @@ The schematic of the tree structure for the 15 disease codes is shown below. The
 knitr::include_graphics("tree.png")
 ```
 
-The tree structure of disease codes is encoded in a matrix where the parent code for each disease code on the tree is recorded. The terminal disease codes (all disease codes in the input dataset) and the layer of all codes on the tree are also specified in the matrix, such that some basic checkings for the tree structure can be done to avoid formatting issues. The four columns should be names as "node", "parent", "layer" and "terminal" in order. If a disease code is on layer X, then its parent code must be on layer X-1. For disease codes on the 2nd layer of the tree, there parent code mush be the root code (named as "root" in the matrix). If the tree matrix is not in correct format, corresponding error messages will pop out. 
+The tree structure of disease codes is stored in a table in which the parent code for each code on the tree is recorded. The first layer of the tree only contains the "root" code. For disease codes on the 2nd layer of the tree, there parent code mush be the root code (named as "root" in the matrix). If the tree matrix is not in correct format, corresponding error messages will pop out. 
 ```{r, echo=TRUE}
 tree_str <- fread("tree.str.simu.txt")    
 print(head(tree_str,10))
