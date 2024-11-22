@@ -247,24 +247,24 @@ gibbs_train <- function( data, tree_str,
   # S1 <- 5
   data <- as.matrix(data)
   
+  colnames(tree_str) <- c("node","parent")
   
   
-  
-  ## Process the tree structure: 
-  # Terminal codes on the tree:
-  tree_ter <- tree_str[terminal=="Y",]
-  
-  ## Reorder terminal/internal codes: 
-  # internal codes:
-  tree_int <- tree_str[!(node %in% colnames(data)),]
-  
-  # Reorder internal codes: according to layers of codes 
-  tree_int<- tree_int[order(layer),]
-  
-  # Reorder termianl codes: according to the columns (order of disease codes) of the input data
-  tree_ter <- tree_ter[match(colnames(data),tree_ter$node)]
-  
-  tree_str <- rbind(tree_int,tree_ter)
+  # ## Process the tree structure: 
+  # # Terminal codes on the tree:
+  # tree_ter <- tree_str[terminal=="Y",]
+  # 
+  # ## Reorder terminal/internal codes: 
+  # # internal codes:
+  # tree_int <- tree_str[!(node %in% colnames(data)),]
+  # 
+  # # Reorder internal codes: according to layers of codes 
+  # tree_int<- tree_int[order(layer),]
+  # 
+  # # Reorder termianl codes: according to the columns (order of disease codes) of the input data
+  # tree_ter <- tree_ter[match(colnames(data),tree_ter$node)]
+  # 
+  # tree_str <- rbind(tree_int,tree_ter)
   
   
   
