@@ -339,9 +339,9 @@ gibbs_train <- function( data, tree_str,
     stop("\"burn_in\" should be smaller then \"cycle\"!")
   }
   
-  if ( ((cycle-burn_in) %% interval) != 0 ) { 
-    stop("(\"cycle\"-\"burn_in\") should be devisible by \"interval\"!")
-  }
+  # if ( ((cycle-burn_in) %% interval) != 0 ) { 
+  #  stop("(\"cycle\"-\"burn_in\") should be devisible by \"interval\"!")
+  # }
   
   
   
