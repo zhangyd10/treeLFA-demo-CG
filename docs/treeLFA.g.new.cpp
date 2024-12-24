@@ -994,13 +994,13 @@ Rcpp::List gibbs( int K, int S, int S1, int D,
   }     
   
   // Collect final results for Gibbs sampler: 
-  result_final[0] = Phi_samples;            
-  result_final[1] = I_samples;             
-  result_final[2] = rho_samples;      
-  result_final[3] = Z_sum_samples;
-  result_final[4] = alpha;
+  result_final[0] = clone(Phi_samples);            
+  result_final[1] = clone(I_samples);             
+  result_final[2] = clone(rho_samples);      
+  result_final[3] = clone(Z_sum_samples);
+  result_final[4] = clone(alpha);
   
-  result_final[5] = L_all;
+  result_final[5] = clone(L_all);
   
   return(result_final);
   
