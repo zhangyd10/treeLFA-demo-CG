@@ -487,7 +487,7 @@ cls_louvain <- function(g_result,k) {
   
   ## Louvain clustering of poterior topics: 
   # build KNN graph:  
-  g <- buildSNNGraph(t(topics_phi), k=k, type="number",warn.ties=FALSE)
+  g <- buildSNNGraph(t(topics_phi), k=k, type="number")
   
   # louvain: 
   clust_all <- igraph::cluster_louvain(g)$membership
