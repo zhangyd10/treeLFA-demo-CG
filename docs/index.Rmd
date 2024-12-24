@@ -19,14 +19,13 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE)
 treeLFA is a topic model based on Bayesian binary non-negative matrix factorization, and is used to infer topics of disease codes from binary diagnosis data. This tutorial gives an example of running treeLFA on a small simulated dataset. 
 Firstly, load the libraries and source the relevant scripts: 
 ```{r,message=FALSE}
-library(data.table) 
-library(dplyr)
+library(data.table)
 library(Rcpp)
 library(RcppParallel)
+library(dqrng)
 library(pheatmap)
 library(RColorBrewer)
-library(stringr)
-library(scran)
+suppressWarnings(library(scran))
 ```
 
 ```{r}
@@ -51,7 +50,7 @@ There are two inputs for treeLFA: the diagnosis data, and the tree structure of 
 The diagnosis data is a bianry matrix in which the presence and absence of all disease codes for all individuals are recorded. Each row in the input matrix is an individual, and each column is a disease code. 
 The example dataset contains the diagnostic record of 15 disease codes for 5,000 individuals. 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
-data <- fread("simu.train.data.txt")    
+data <- fread("simu.train.data.new.txt")    
 print(head(data))
 ```
 
@@ -99,8 +98,8 @@ On very large datasets, the Gibbs-EM training can be divided into sevaral phases
 #                              alpha=ge_result$alpha_samples, 
 #                              Z=ge_result$Z_samples,
 #                              burn_in=19, 
-#                              opt_N_1=1, cycle_1=1, 
-#                              opt_N_2=1, cycle_2=1 )
+#                              opt_N_1=1, cycle_1=500, 
+#                              opt_N_2=10, cycle_2=50 )
 ```
 
 With alpha optimized and fixed, Gibbs sampling can be used to collected multiple posterior sampels of hidden variables. The number of burn in Gibbs iterations (argument "burn_in"), the total number of Gibbs iterations (argument "cycle") and the number of interval iterations while collecting posterior samples (argument "interval") need to be set: 
