@@ -981,10 +981,10 @@ Rcpp::List gibbs( int K, int S, int S1, int D,
     // Collect posterior samples of hidden variables: 
     if ( (c > burn_in) & (c % interval == 0) ) {  
       
-      Phi_samples[j] = Phi;
-      I_samples[j] = I;
-      rho_samples[j] = rho;
-      Z_sum_samples[j] = Z_sum_m;
+      Phi_samples[j] = clone(Phi);
+      I_samples[j] = clone(I);
+      rho_samples[j] = clone(rho);
+      Z_sum_samples[j] = clone(Z_sum_m);
       
       j = j + 1;
       
