@@ -2,7 +2,7 @@
 // [[Rcpp::depends(dqrng, BH, sitmo)]]
 #include <pcg_random.hpp>
 #include <dqrng_distribution.h>
-// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::plugins(cpp14)]]
 // [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
 
