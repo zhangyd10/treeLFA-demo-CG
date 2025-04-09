@@ -480,7 +480,7 @@ ess_plot <- function( ess, bin_N, N_ps ) {
 
   ggplot(df_plot, aes(x=category)) +
     geom_bar(fill="steelblue", color="white") + 
-    labs(x="Range of effective sample size")
+    labs(x="Range of effective sample size", y="Count of variables")
 
 }
 
