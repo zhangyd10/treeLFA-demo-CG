@@ -1,6 +1,6 @@
 ### Training with the gibbs-em algorithm: 
 gibbs_EM_train <- function( topic.number,
-                            data, tree_str,
+                            data, ...,
                             Phi, I, rho, alpha, Z,
                             burn_in,
                             opt_N_1, cycle_1,
