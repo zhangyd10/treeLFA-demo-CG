@@ -252,13 +252,30 @@ gibbs_EM_train <- function( topic.number,
 
 
 ### Training with the gibbs sampling algorithm: alpha fixed at values given by gibbs-em algorithm:
-gibbs_train <- function( data, tree_str,
+gibbs_train <- function( data, ...,
                          Phi, I, rho, alpha, Z,
                          burn_in, cycle, interval ) {
   
   # Prepare the input data:
   topic.number <- nrow(Phi)
   S <- ncol(data)    # number of terminal disease codes on the tree 
+  
+  # check if the tree str is provided:
+  dots <- list(...)
+  if (!"tree_str" %in% names(dots)) {
+    message("tree structure is not provided, use a non-informative tree structure as default") 
+    tree_str <- data.table( matrix( nrow=ncol(data), ncol=2, "") )
+    S1 <- 0
+    colnames(tree_str) <- c("node","parent")
+    tree_str$parent <- rep("root",nrow(tree_str))
+    tree_str$node <- colnames(data)
+    print(tree_str)
+  } else {
+    tree_str <- dots$`tree_str`
+    S1 <- nrow(tree_str) - ncol(data)    # number of internal disease codes on the tree
+  }
+
+  
   S1 <- nrow(tree_str) - ncol(data)      # number of internal disease codes on the tree 
   # S1 <- 5
   data <- as.matrix(data)
