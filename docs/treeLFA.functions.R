@@ -606,7 +606,9 @@ cls_hier <- function(g_result,k) {
   
   
   ## Hierarchical clustering of poterior topics: 
-  dist_topics <- dist(topics_ave,method="manhattan")
+    dist_topics <- 1 - cosine(t(topics_ave))
+  dist_topics <- dist(dist_topics)
+  
   cls_h <- hclust( dist_topics )
   clust_h <- cutree( cls_h, k=k )
   
