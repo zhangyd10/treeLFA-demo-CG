@@ -349,7 +349,6 @@ struct Phi_parallel : public RcppParallel::Worker {
 
 Rcpp::NumericMatrix gibbs_Phi_new( int K, int S, int S1, int D, 
                                    double a00, double a01, double a10, double a11, 
-                                   double rho0, double rho1, 
                                    Rcpp::NumericVector alpha, 
                                    Rcpp::NumericMatrix Phi, 
                                    Rcpp::NumericMatrix Z, 
@@ -856,7 +855,7 @@ Rcpp::List gibbs_parallel( int K, int S, int S1, int D,
       
       Phi = gibbs_Phi_new( K, S, S1, D, 
                            a00, a01, a10, a11, 
-                           rho[0], rho[1], alpha, 
+                           alpha, 
                            Phi, Z, I, LDA_data ); 
       
       result_Z = gibbs_Z_c_new( S1, alpha, Phi, LDA_data, Z, Z_sum_m ); 
@@ -876,7 +875,7 @@ Rcpp::List gibbs_parallel( int K, int S, int S1, int D,
     
     Phi = gibbs_Phi_new( K, S, S1, D, 
                          a00, a01, a10, a11, 
-                         rho[0], rho[1], alpha, 
+                         alpha, 
                          Phi, Z, I, LDA_data ); 
     
     result_Z = gibbs_Z_c_new( S1, alpha, Phi, LDA_data, Z, Z_sum_m ); 
