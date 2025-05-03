@@ -919,7 +919,9 @@ Rcpp::List gibbs_EM( int K, int S, int S1, int D,
   Rcpp::List result_final(6);
   // Result for one gibbs sampling iteration:
   Rcpp::List result_gibbs(6);
-  
+  Rcpp::List result_intermediate(0);
+
+  Rcpp::Function saveRDS("saveRDS");
   
   // Summary of topic assignments for all disease variables for all individuals:
   Rcpp::List Z_sum_1( opt_N_1 );    // 1st training stage: one posterior sample of Z collected in the E-step
@@ -936,7 +938,7 @@ Rcpp::List gibbs_EM( int K, int S, int S1, int D,
   Rcpp::NumericVector Phi_prior( cycle_1 + cycle_2 );
   Rcpp::NumericVector rho_prior( cycle_1 + cycle_2 );
   
-  Rcpp::NumericVector L_all( cycle_1 + cycle_2 );
+  Rcpp::NumericVector L_all( cycle_1 + cycle_2, 0.0 );
 
   
   
@@ -944,6 +946,17 @@ Rcpp::List gibbs_EM( int K, int S, int S1, int D,
     
     if ( c % 50 == 0 ) { 
       std::cout << "EM iteration (stage 1): " << c << std::endl;
+
+      result_intermediate["Phi_samples"] = Phi;            
+      result_intermediate["I_samples"] = I;             
+      result_intermediate["rho_samples"] = rho;      
+      result_intermediate["Z_sum_samples"] = alpha;         
+      result_intermediate["alpha"] = Z;
+      result_intermediate["L_all"] = L_all;
+      
+      // save intermediate result
+      saveRDS(result_intermediate, "intermediate_result.RData");
+      
     }
     
     
@@ -988,6 +1001,17 @@ Rcpp::List gibbs_EM( int K, int S, int S1, int D,
     
     if ( c % 5 == 0 ) {
       std::cout << "EM iteration (stage 2): " << c << std::endl;
+
+      result_intermediate["Phi_samples"] = Phi;            
+      result_intermediate["I_samples"] = I;             
+      result_intermediate["rho_samples"] = rho;      
+      result_intermediate["Z_sum_samples"] = alpha;         
+      result_intermediate["alpha"] = Z;
+      result_intermediate["L_all"] = L_all;
+      
+      // save intermediate result
+      saveRDS(result_intermediate, "intermediate_result.RData");
+      
     }
     
     // Gibbs sampling: one iteration
