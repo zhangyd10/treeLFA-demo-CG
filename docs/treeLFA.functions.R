@@ -348,7 +348,7 @@ gibbs_train <- function( data, ...,
   # Beta prior for the transition probability of the Markov process on the tree
   b00 <- 3
   b01 <- 20
-  b10 <- 20
+  b10 <- 3
   b11 <- 3
   
 
