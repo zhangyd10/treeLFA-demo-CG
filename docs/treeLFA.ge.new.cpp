@@ -412,12 +412,12 @@ Rcpp::NumericMatrix gibbs_I( int K, int S, int S1, int D,
       double prod_p1=1;
       
       for ( int n=1; n<=child_value.size(); n++ ){
-        prod_p0 = prod_p0 * pow(1-rho0,child_value[n-1]) * pow( rho0,1-child_value[n-1] );
-        prod_p1 = prod_p1 * pow(1-rho1,child_value[n-1]) * pow( rho1,1-child_value[n-1] );
+        prod_p0 = prod_p0 * pow(rho0,child_value[n-1]) * pow( 1-rho0,1-child_value[n-1] );
+        prod_p1 = prod_p1 * pow(rho1,child_value[n-1]) * pow( 1-rho1,1-child_value[n-1] );
       }
       
-      p0 = ( pow(rho1,pa_value) * pow(rho0,1-pa_value) ) * prod_p0;
-      p1 = ( pow(1-rho1,pa_value) * pow(1-rho0,1-pa_value) ) * prod_p1;
+      p0 = ( pow(1-rho1,pa_value) * pow(1-rho0,1-pa_value) ) * prod_p0;
+      p1 = ( pow(rho1,pa_value) * pow(rho0,1-pa_value) ) * prod_p1;
       
       p0_n = p0 / (p0+p1);
       p1_n = p1 / (p0+p1);
@@ -439,8 +439,8 @@ Rcpp::NumericMatrix gibbs_I( int K, int S, int S1, int D,
       if ( pa_index==0 ) { pa_value=0; } 
       else { pa_value = I(k-1, pa_index-1); }             
       
-      p0 = R::dbeta(phi,a00,a01,false) * ( pow(rho1,pa_value) * pow(rho0,1-pa_value) );
-      p1 = R::dbeta(phi,a10,a11,false)  * ( pow(1-rho1,pa_value) * pow(1-rho0,1-pa_value) );
+      p0 = R::dbeta(phi,a00,a01,false) * ( pow(1-rho1,pa_value) * pow(1-rho0,1-pa_value) );
+      p1 = R::dbeta(phi,a10,a11,false)  * ( pow(rho1,pa_value) * pow(rho0,1-pa_value) );
       
       p0_n = p0 / (p0+p1);
       p1_n = p1 / (p0+p1);
@@ -514,13 +514,13 @@ Rcpp::NumericVector gibbs_rho( int K, int S, int S1,
   std::gamma_distribution<double> gamma_dist2( N0-m01+b01, 1.0 );
   X = gamma_dist1(gen);
   Y = gamma_dist2(gen);
-  rho[0] = 1 - X/(X+Y);
+  rho[0] = X/(X+Y);
   
   std::gamma_distribution<double> gamma_dist3( m11+b10, 1.0 );
   std::gamma_distribution<double> gamma_dist4( N1-m11+b11, 1.0 );
   X = gamma_dist3(gen);
   Y = gamma_dist4(gen);
-  rho[1] = 1 - X/(X+Y);
+  rho[1] = X/(X+Y);
   
   return( rho );
   
@@ -692,8 +692,8 @@ double prior_I( Rcpp::NumericMatrix I,
       } else { pa_value = I(k, pa_index-1); }
       
       if ( pa_value==0 ){ 
-        L_m =  L_m + I(k,l) * log10( (1-rho[0]) ) + ( 1-I(k,l) ) * log10( rho[0] );   
-      } else { L_m =  L_m + I(k,l) * log10( (1-rho[1]) ) + ( 1-I(k,l) ) * log10( rho[1] ); }
+        L_m =  L_m + I(k,l) * log10( rho[0] ) + ( 1-I(k,l) ) * log10( 1-rho[0] );   
+      } else { L_m =  L_m + I(k,l) * log10( rho[1] ) + ( 1-I(k,l) ) * log10( 1-rho[1] ); }
       
     }
     
@@ -711,8 +711,8 @@ double prior_rho( double b00, double b01, double b10, double b11,
                   Rcpp::NumericVector rho, Rcpp::NumericMatrix I ){ 
   
   double L_m = 0; 
-  double rho01 = 1 - rho[0]; 
-  double rho11 = 1 - rho[1]; 
+  double rho01 = rho[0]; 
+  double rho11 = rho[1]; 
   
   L_m = L_m + log10(tgamma(b00+b01)) - log10(tgamma(b00)) - log10(tgamma(b01)) + 
     (b00-1)*log10(rho01) + (b01-1)*log10(1-rho01); 
