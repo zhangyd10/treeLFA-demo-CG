@@ -755,3 +755,63 @@ cls_others <- function(g_result) {
   return(g_result)
   
 }
+
+
+
+
+
+### evaluation of topics: 
+## topic coherence: 
+topics_coherence <- function(topics, data) { 
+  
+  TC <- 0 
+  
+  for ( k in 1:nrow(topics) ) { 
+    
+    TC_topic <- 0 
+    
+    for ( s1 in 1:(ncol(topics)-1) ) { 
+      
+      for ( s2 in (s1+1):ncol(topics) ) { 
+        
+        P1 <- sum(data[,s1])/nrow(data)
+        P2 <- sum(data[,s2])/nrow(data)
+        P12 <- sum( data[,s1] * data[,s2] ) / nrow(data)
+        f_tmp <- ( log( P12/(P1*P2) ) / -log(P12) )
+        
+        TC_topic <- TC_topic + f_tmp
+      }
+      
+    }
+    
+    TC <- TC + TC_topic/( ncol(data)*(ncol(data)-1) )
+    
+  }
+  
+  TC <- TC/ncol(data)
+  
+  return(TC)
+  
+} 
+
+
+
+
+
+## topic diversity: 
+topcis_diversity <- function(topics, data, N) { 
+  
+  TD <- 0 
+  
+  codes_top <- vector(length=0,mode="character")  
+  
+  for ( k in 1:nrow(topics) ) { 
+    codes_top <- c(codes_top,colnames(data)[order( topics[k,], decreasing=TRUE )[1:min(N,ncol(topics))]])
+  }
+  codes_top_unique <- unique(codes_top)
+  
+  TD <- codes_top_unique/(N*nrow(topics))
+  
+  return(TD)
+  
+} 
