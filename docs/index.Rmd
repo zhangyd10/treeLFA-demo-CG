@@ -80,7 +80,7 @@ With the input data prepared, the Gibbs-EM algorithm for treeLFA can be used to 
 In addition, the "burn_in" argument denotes the number of Gibbs sampling iterations (19 was proved to be a good choice) in each E-step before the collection of samples of hidden variables, which are then used for optimization of alpha in the M-step. There are two stages of training. For both stages, the total number of EM cycles (arguements "cycle_1" and "cycle_2") and the number of hidden variables collected in the E-step can be set (arguement "opt_N_1" and "opt_N_2"). Note that in stage 1, "opt_N_1" is usually set to be 1 to speed up the traniing. In stage 2, "opt_N_2" can be set to a value larger than 1 to achieve more accurate optimization of alpha. The Gibbs-EM training here will take about two minutes. 
 ```{r, echo=TRUE,results='hide'}
 ge_result <- gibbs_EM_train( topic.number=10,
-                             data,tree_str,
+                             data=data,tree_str=tree_str,
                              burn_in=19, 
                              alpha=rep(0.1,10),
                              opt_N_1=1, cycle_1=500, 
@@ -94,7 +94,7 @@ plot(1:length(ge_result$L_all),ge_result$L_all,type="line",xlab="Gibbs-EM cycles
 On very large datasets, the Gibbs-EM training can be divided into sevaral phases. By setting the hidden variables (Phi, I, rho, Z) and alpha in the "gibbs_EM_train" function, previous training can be continued by setting initial values of hidden variables as those from previous training.
 ```{r,echo=TRUE,results='hide'}
 # ge_result <- gibbs_EM_train( topic.number=4,
-#                              data,tree_str,
+#                              data=data,tree_str=tree_str,
 #                              Phi=ge_result$Phi_samples, 
 #                              I=ge_result$I_samples, 
 #                              rho=ge_result$rho_samples, 
