@@ -26,6 +26,7 @@ library(dqrng)
 library(pheatmap)
 library(RColorBrewer)
 library(coda)
+library(lsa)
 suppressWarnings(library(scran))
 library(ggplot2)
 ```
