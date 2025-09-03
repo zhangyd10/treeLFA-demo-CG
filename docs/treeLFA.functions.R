@@ -763,7 +763,9 @@ cls_others <- function(g_result) {
 ### evaluation of topics: 
 ## topic coherence: 
 topics_coherence <- function(topics, data) { 
-  
+
+  data <- as.matrix(data)
+
   TC <- 0 
   
   for ( k in 1:nrow(topics) ) { 
@@ -800,7 +802,9 @@ topics_coherence <- function(topics, data) {
 
 ## topic diversity: 
 topics_diversity <- function(topics, data, N) { 
-  
+
+  data <- as.matrix(data)
+
   TD <- 0 
   
   codes_top <- vector(length=0,mode="character")  
@@ -810,7 +814,7 @@ topics_diversity <- function(topics, data, N) {
   }
   codes_top_unique <- unique(codes_top)
   
-  TD <- codes_top_unique/(N*nrow(topics))
+  TD <- length(codes_top_unique)/(N*nrow(topics))
   
   return(TD)
   
