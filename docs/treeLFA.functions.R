@@ -799,7 +799,7 @@ topics_coherence <- function(topics, data) {
 
 
 ## topic diversity: 
-topcis_diversity <- function(topics, data, N) { 
+topics_diversity <- function(topics, data, N) { 
   
   TD <- 0 
   
